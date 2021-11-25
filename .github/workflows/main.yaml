@@ -54,8 +54,8 @@ jobs:
       - name: Create cover profile
         run: make coverprofile
 
-      - name: Run Docker Test
-        run: make dockertest
+      #- name: Run Docker Test
+      #  run: make dockertest
 
       - name: Submit Coveralls
         env:

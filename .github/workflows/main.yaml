@@ -42,13 +42,10 @@ jobs:
       #
       # Build docker image for service
       - name: Build docker image
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           push: false
-          repository: ${{ env.GROUP }}/${{ env.REPO }}
-          tag_with_ref: true
-          tag_with_sha: true
-          tags: ${{ github.sha }}
+          tags: ${{ env.GROUP }}/${{ env.REPO }}:${{ github.sha }}
 
       #
       #

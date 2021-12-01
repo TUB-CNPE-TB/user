@@ -22,6 +22,7 @@ jobs:
       GROUP: europe-west3-docker.pkg.dev/cnpe-blue/sockshop
       COMMIT: ${{ github.sha }}
       REPO: user
+      REPO_DB: user-db
       GO_VERSION: 1.17
       GOPATH: /home/runner/work/user/user/go
 
@@ -49,6 +50,17 @@ jobs:
 
       #
       #
+      # Build docker image for database
+      - name: Build database image
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          dockerfile: go/src/github.com/TUB-CNPE-TB/user/docker/user-db/Dockerfile
+          path: go/src/github.com/TUB-CNPE-TB/user
+          tags: ${{ env.GROUP }}/${{ env.REPO_DB }}:${{ github.sha }}
+
+      #
+      #
       # Login to GAR
       - name: Login to GAR
         uses: docker/login-action@v1
@@ -64,3 +76,8 @@ jobs:
       - name: Push to GAR
         if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
         run: docker push ${{ env.GROUP }}/${{ env.REPO }} --all-tags
+      #
+      # Push to GAR
+      - name: Push DB to GAR
+        if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
+        run: docker push ${{ env.GROUP }}/${{ env.REPO_DB }} --all-tags

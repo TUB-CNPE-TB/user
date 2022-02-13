@@ -27,7 +27,7 @@ paths:
       description: Register new user
       operationId: Set User
       requestBody:
-        description: register object
+        description: Not privacy related changes
         content:
           application/json;charset=UTF-8:
             schema:
@@ -472,6 +472,9 @@ components:
         email:
           type: string
           description: Email
+        postCode:
+          type: int
+          description: Post code
     Postcard:
       title: Post Card
       type: object

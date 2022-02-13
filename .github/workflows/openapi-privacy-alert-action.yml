@@ -1,0 +1,37 @@
+on: [push]
+
+jobs:
+  detect-privacy-related-changed:
+    runs-on: ubuntu-latest
+    name: Detect privacy related changes
+    steps:
+      - name: Prepare DB connection
+        run: echo "$DB_CRT" >> db.crt
+        shell: bash
+        env:
+          DB_CRT : ${{ secrets.DB_CRT }}
+      - name: Check out head branch
+        uses: actions/checkout@v2
+        with:
+          path: head
+      - name: Check out previous commit branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+          path: base
+      - name: Switch base to previous commit
+        run: |
+          cd base
+          git checkout HEAD^
+          cd ..
+      - name: OpenAPI Privacy Alert
+        uses: ./head/openapi-privacy-alert-action/
+        id: openapi-privacy-alert
+        with:
+          source-specification: base/apispec/openapi.3.0.1.yaml
+          changed-specification: head/apispec/openapi.3.0.1.yaml
+          db-connection: ${{ secrets.DB_CONNECTION_STRING }}
+          db-name: ${{ secrets.DB_NAME }}
+          table-name: ${{ secrets.TABLE_NAME }}
+          service-name: ${{ github.repository }}
+          commit: ${{ github.sha }}

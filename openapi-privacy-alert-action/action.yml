@@ -1,0 +1,37 @@
+name: 'CI Privacy Alert'
+description: 'Detect changes in OpenAPI Spec and write them to DB'
+
+inputs:
+  source-specification:  
+    description: 'Source spec'
+    required: true
+  changed-specification:  
+    description: 'Changed spec'
+    required: true
+  db-connection:
+    description: 'DB Connection string'
+    required: true
+  db-name:
+    description: 'Database name'
+    required: true
+  table-name:
+    description: 'Table name'
+    required: true
+  service-name:
+    description: 'Name of the current serivce'
+    required: true
+  commit:
+    description: 'Hash code of the commit'
+    required: true
+  
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.source-specification }}
+    - ${{ inputs.changed-specification }}
+    - ${{ inputs.db-connection }}
+    - ${{ inputs.db-name }}
+    - ${{ inputs.table-name }}
+    - ${{ inputs.service-name }}
+    - ${{ inputs.commit }}
